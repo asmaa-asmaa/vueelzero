@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vue.js elzero tutorial</title>
+    <link rel="stylesheet" href="./main.css" />
+  </head>
+  <body>
+    <div id="app-root" :style="{ '--mainColor': color } ">
+      <form action="">
+        <input :type="fieldType" placeholder="type your password" />
+        <button @click.prevent="switchField">show/hide password</button>
+      </form>
+      <form action="">
+        <input type="text" placeholder="type your post title" v-model="input" />
+        <button @click.prevent="convertToSlug">convert to slug</button>
+      </form>
+      <div class="slug-result">
+        https://elzero.org/<span>{{ output }}</span>
+      </div>
+
+      <ul class="switch-colors">
+        <li data-color="#b71540" @click="updateColor"></li>
+        <li data-color="yellow" @click="updateColor"></li>
+        <li data-color="thistle" @click="updateColor"></li>
+        <li data-color="hotpink" @click="updateColor"></li>
+      </ul>
+      <div class="changes">
+        <div>change</div>
+        <div>change</div>
+        <div>change</div>
+        <div>change</div>
+        <div>change</div>
+      </div>
+      <hr />
+      <div class="product">
+        <h3>product title</h3>
+        <p>product description</p>
+        <span class="price">price: ${{ price }}</span>
+        <span class="amount-title"></span>
+        <input type="range" min="1" max="20" step="1" v-model="amount" />
+        <div class="total-price">
+          <span class="amount">amount {{ amount}}</span>
+          <span class="total">total $ {{ totalPrice }}</span>
+        </div>
+      </div>
+
+      <input type="text" v-model="userName" />
+      <button @click="getRepos">get repos</button>
+      <div v-for="repo in repos">
+        <h4>{{ repo.name }}</h4>
+      </div>
+
+      <form action="" method="post" @submit="validateForm">
+        <div class="errors-list">
+          <div class="error" v-for="error in formErrors">{{ error }}</div>
+        </div>
+        <div class="form-group">
+          <label for="">username</label>
+          <input
+            type="text"
+            name="username"
+            class="form-input"
+            v-model="userName"
+          />
+        </div>
+        <div class="form-group">
+          <label for="">subject</label>
+          <input
+            type="text"
+            name="subject"
+            class="form-input"
+            v-model="subject"
+          />
+        </div>
+        <div class="form-group">
+          <label for="">message</label>
+          <textarea
+            name="message"
+            class="form-input"
+            v-model="message"
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <input type="submit" value="send" class="send-button" />
+        </div>
+      </form>
+      <hr />
+
+      <form action="">
+        <input type="text" placeholder="type your task" v-model="taskText" />
+        <button @click.prevent="addTask" :disabled="!taskText">add task</button>
+        <button @click.prevent="deleteAll" v-if="tasks.length > 1">
+          delete all
+        </button>
+      </form>
+      <div v-for="(task, index) in tasks">
+        <div
+          @click="task.done = !task.done"
+          style="text-decoration: 'line-through'"
+          class="task-box"
+        >
+          {{ task.words}}
+        </div>
+        <span @click.stop="deleteTask(index)" class="delete">delete</span>
+      </div>
+      <hr/>
+      <form>
+        <input type="text" placeholder="type your name" v-model="name">
+        <input type="email" placeholder="type your email" v-model="email">
+        <input type="number" placeholder="type your number" v-model="phone">
+        <button :disabled="!name || !email || !phone">send data</button>
+      </form>
+      <hr/>
+
+      <div class="grad-box" :style="{ backgroundImage: 'linear-gradient('+ direction +' , '+ colorOne+' , '+ colorTwo+')'}">gradient preview</div>
+      <form action="">
+        <div class="form-group">
+            <label for="">direction</label>
+            <input type="text" v-model="direction">
+        </div>
+        <div class="form-group">
+            <label for="">color stop one</label>
+            <input type="text" v-model="colorOne">
+        </div>
+        <div class="form-group">
+            <label for="">color stop two</label>
+            <input type="text" v-model="colorTwo">
+        </div>
+      </form>
+      <div class="result">
+        <span>css code</span>: background-image: linear-gradient({{direction}}, {{ colorOne }}, {{ colorTwo}}); 
+      </div>
+      <div class="syntax">
+        <span>syntax</span>: background-image: linear-gradient({{direction}}, {{ colorOne }}, {{ colorTwo }});
+      </div>
+      <hr/>
+      <button @click="isSelected = !isSelected" :class="{selected: isSelected}">first method</button>
+      <button @click="toggle">second method</button>
+      <button @click="toggleAdvanced($event,'selected')">third method</button>
+      <hr/>
+      <ul class="tabs-choose">
+        <li @click="activeTab = '1'" :class="[activeTab === '1' ? 'active' : '']"> tab one</li>
+        <li @click="activeTab = '2'" :class="[activeTab === '2' ? 'active' : '']">tab two</li>
+        <li @click="activeTab = '3'" :class="[activeTab === '3' ? 'active' : '']">tab three</li>
+        <li @click="activeTab = '4'" :class="[activeTab === '4' ? 'active' : '']">tab four</li>
+      </ul>
+      <div class="tabs-content">
+        <div class="content-one" v-if="activeTab === '1'"> content one</div>
+        <div class="content-one" v-if="activeTab === '2'">content two</div>
+        <div class="content-one" v-if="activeTab === '3'">content three</div>
+        <div class="content-one" v-if="activeTab === '4'">content four</div>
+      </div>
+      <hr/>
+      <img v-if="selected" :src="selected" alt="" />
+      <hr/>
+      <button @click="message = !message">{{ message? 'hide message': 'show message'}}</button>
+      <transition name="bounce">
+        <div class="the-message" v-if="message">this is an alert</div>
+      </transition>
+      <hr/>
+      <div class="question-box" v-for="question in questions">
+        <!--<h3>{{question.title}}</h3>-->
+        <h3 @click="question.open = !question.open" v-text="question.title"></h3>
+        <div class="question-reply" v-show="question.open">
+          <p>{{ question.reply}}</p>
+        </div>
+      </div>
+      <hr/>
+      <h4>write your message ( {{ maxLength }} charachters allowed)</h4>
+      <textarea @input="countChars" v-model="message" :maxlength="maxLength"></textarea>
+      <span class="counter" :class="{'zero': reachZero}">
+        left <span>{{ remainingChars }}</span>
+      </span>
+      <hr/>
+      <hr/>
+      <hr/>
+      <p v-text="nname? 'your name is set' : 'your name is not set'"></p>
+      <p v-text="'mr' + namme"></p>
+      <p v-text="title"></p>
+      <p v-html="title"></p>
+      <p v-once>{{ namme }}</p>
+      <a :href="imageUrl">
+        <img :src="imageSrc" :alt="imageAltText">
+      </a>
+      <p>counter is {{ counter }}</p>
+      <button @click.middle="counter ++">increase count</button>
+      <button @click.right="counter ++">increase count</button>
+      <button @click.left="counter ++">increase count</button>
+      <button @click.stop="counter ++">increase count</button>
+      <input type="text" :value="namme">
+      <input type="text" v-model="findLanguage">
+      <ul>
+        <li v-for="lang in filterLanguages">{{ lang }}</li>
+      </ul>
+      <label>egyptian pound</label>
+      <input type="text" v-model="eg">
+      <label>saudi riyal</label>
+      <input type="text" v-model="sar">
+
+      <label>hour</label>
+      <input type="text" v-model="hour">
+      <label>minute</label>
+      <input type="text" v-model="minute">
+      <label>second</label>
+      <input type="text" v-model="second">
+
+      <hr/>
+      
+
+
+
+
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="./script.js"></script>
+    
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>-->
+  </body>
+</html>
